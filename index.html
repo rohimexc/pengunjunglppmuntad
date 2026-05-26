@@ -5,21 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Buku Tamu — LPPM Universitas Tadulako</title>
 
-  <!-- ⚙️ GANTI dengan URL Apps Script Web App Anda setelah deploy -->
   <script>
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDsrHUTJ4kBKlxQUaU3d3DSK0EhfNsZlxxW8RgXXMLQPK8HvrNbY9hL-UB4R8BO3YK/exec';
+    const WA_API_URL      = 'https://whatsapp.venusverse.me/api/session/rohim/send';
+    const WA_API_KEY      = '511607e2e53f47e3908c936f09dc7408bde44fc9e1a446eeb9041a94e4c55106';
   </script>
 
-  <!-- Google Fonts & FontAwesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Tailwind Configuration -->
   <script>
     tailwind.config = {
       theme: {
@@ -55,15 +53,12 @@
   </script>
 
   <style>
-    /* Custom Scrollbar & Utility Overrides */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #b0bfcf; border-radius: 99px; }
     ::-webkit-scrollbar-thumb:hover { background: #6b7f96; }
     html { scroll-behavior: smooth; }
     body { background-color: #f4f7fb; overflow-x: hidden; }
-
-    /* Custom select chevron */
     .custom-select {
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7f96' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -83,44 +78,36 @@
   <div class="fixed -bottom-16 -right-16 w-80 h-80 bg-gold/10 rounded-full blur-3xl animate-float-delayed pointer-events-none z-[-1]"></div>
 
   <header class="relative bg-gradient-to-br from-navy via-navy-mid to-navy-lt px-6 py-8 md:py-12 shadow-[0_10px_40px_rgba(13,43,78,0.25)] overflow-hidden">
-    <!-- Header Pattern Overlay -->
     <div class="absolute inset-0 opacity-[0.03]" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
     
     <div class="max-w-4xl mx-auto flex flex-col items-center relative z-10 text-center">
-      <!-- Logo -->
       <img
         src="https://lh3.googleusercontent.com/d/16sowD23pA_OKAT1x09pjIkgBo7EqfSsN"
         alt="Logo LPPM Untad"
         class="w-20 md:w-24 h-auto object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)] mb-4 md:mb-5"
         onerror="this.src='https://via.placeholder.com/96/1a3a5c/c8972a?text=LPPM'"
       />
-      <!-- Teks Utama -->
       <div class="mb-6 md:mb-8">
         <p class="text-[10px] md:text-xs tracking-[0.2em] uppercase text-gold-lt font-bold mb-2 drop-shadow-md">Lembaga Penelitian dan Pengabdian Kepada Masyarakat</p>
         <h1 class="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-white leading-tight drop-shadow-lg">Universitas Tadulako</h1>
       </div>
       
-      <!-- Shape Sapaan & Jam Realtime -->
       <div class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 w-full">
-        <!-- Shape Greeting (Glassmorphism) -->
         <div class="bg-white/10 border border-white/20 backdrop-blur-md rounded-2xl px-5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex items-center gap-2.5 transition-all hover:bg-white/15">
           <i class="fas fa-hand-sparkles text-gold-lt text-base animate-pulse"></i>
           <p id="dynamicGreeting" class="text-xs md:text-sm text-white font-medium tracking-wide"></p>
         </div>
-        <!-- Clock Badge -->
         <div class="inline-flex items-center gap-2 bg-navy-mid/60 border border-white/10 backdrop-blur-md rounded-2xl px-5 py-2.5 text-white text-xs md:text-sm font-mono shadow-inner">
           <i class="far fa-clock text-gold-lt"></i>
           <span id="realtimeClock" class="font-semibold tracking-wider">00:00:00 WITA</span>
         </div>
       </div>
     </div>
-    <!-- Gold Bottom Strip -->
     <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-80"></div>
   </header>
 
   <main class="max-w-4xl mx-auto px-4 py-8 md:py-12 mb-10">
 
-    <!-- Progress Indicator -->
     <div id="progressContainer" class="flex items-center gap-4 mb-8 bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100/50">
       <span class="text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap"><i class="fas fa-tasks mr-1"></i> Kelengkapan</span>
       <div class="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
@@ -136,7 +123,7 @@
       </div>
       <h2 class="font-serif text-3xl md:text-4xl text-navy font-bold mb-4 animate-fade-in" style="animation-delay: 0.2s;">Pendaftaran Berhasil!</h2>
       <p class="text-gray-500 md:text-lg max-w-lg mx-auto leading-relaxed mb-8 animate-fade-in" style="animation-delay: 0.3s;">
-        Terima kasih, data kunjungan Anda telah dicatat oleh sistem. Silakan menunggu, petugas kami akan segera melayani Anda.
+        Terima kasih, data kunjungan Anda telah dicatat oleh sistem. Notifikasi telah dikirim ke WhatsApp Anda. Silakan menunggu, staf kami akan segera melayani Anda.
       </p>
       
       <div class="inline-flex flex-col gap-2 bg-white/60 backdrop-blur border border-gold/30 rounded-2xl p-6 shadow-lg mb-10 text-sm md:text-base text-left animate-fade-in w-full max-w-md" style="animation-delay: 0.4s;">
@@ -291,8 +278,6 @@
                 placeholder="Ketik untuk mencari nama atau unit..." autocomplete="off" required 
                 class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-navy-lt focus:ring-4 focus:ring-navy-lt/10 transition-all outline-none text-gray-700 placeholder-gray-400" />
               <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-navy transition-colors"></i>
-              
-              <!-- Autocomplete List -->
               <div id="autocompleteList" class="hidden absolute top-[calc(100%+8px)] left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl max-h-60 overflow-y-auto divide-y divide-gray-50"></div>
             </div>
             <p class="mt-2 text-xs text-gray-500"><i class="fas fa-info-circle text-gold mr-1"></i> Pilih dari daftar yang muncul, atau ketik manual jika nama tidak tersedia.</p>
@@ -344,12 +329,10 @@
       <div class="animate-card-in" style="animation-delay: 0.5s;">
         <button type="submit" id="submitBtn" class="group relative w-full bg-gradient-to-r from-navy to-navy-lt text-white font-bold text-lg py-4.5 rounded-2xl shadow-[0_8px_24px_rgba(13,43,78,0.3)] hover:shadow-[0_12px_32px_rgba(13,43,78,0.4)] hover:-translate-y-1 transition-all duration-300 overflow-hidden">
           <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
-          
           <div class="relative flex items-center justify-center gap-3 py-4">
             <span id="btnText" class="flex items-center gap-2"><i class="fas fa-paper-plane text-gold-lt"></i> Kirim & Daftarkan Kunjungan</span>
             <div id="btnSpinner" class="hidden w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
-          
           <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-gold via-gold-lt to-gold bg-[length:200%_auto] animate-shimmer"></div>
         </button>
         <p class="text-center text-[11px] text-gray-400 mt-4"><i class="fas fa-lock mr-1 text-gray-300"></i> Data Anda dijamin keamanannya dan hanya digunakan untuk keperluan instansi.</p>
@@ -359,7 +342,7 @@
   </main>
 
   <footer class="text-center py-6 border-t border-gray-200/60 text-xs text-gray-400 bg-white/50 backdrop-blur-sm">
-    <p class="mb-1">&copy; 2025 LPPM Universitas Tadulako</p>
+    <p class="mb-1">&copy; 2026 LPPM Universitas Tadulako, crafted by <a href="https://diginus.web.id" target="_blank" class="hover:text-navy transition-colors">diginus</a></p>
     <p>Jl. Soekarno-Hatta Km. 9, Palu, Sulawesi Tengah &nbsp;|&nbsp; <a href="https://lppm.untad.ac.id" target="_blank" class="hover:text-navy transition-colors">lppm.untad.ac.id</a></p>
   </footer>
 
@@ -369,12 +352,14 @@
   </div>
 
   <script>
+    /* ───────────────────────────────────────────
+       CLOCK & GREETING
+    ─────────────────────────────────────────── */
     function updateClockAndGreeting() {
       const now = new Date();
       const optionsTime = { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
       const timeString = now.toLocaleTimeString('id-ID', optionsTime).replace(/\./g, ':');
       document.getElementById('realtimeClock').textContent = timeString + ' WITA';
-
       const hour = parseInt(now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar', hour: '2-digit', hour12: false }), 10);
       let greeting = 'Selamat Datang';
       if (hour >= 4 && hour < 11) greeting = 'Selamat Pagi';
@@ -386,19 +371,82 @@
     setInterval(updateClockAndGreeting, 1000);
     updateClockAndGreeting();
 
-    let PEGAWAI_LIST = ['Memuat daftar pegawai...'];
-    async function fetchPegawaiList() {
-      if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
-        PEGAWAI_LIST = ['Data dummy 1', 'Data dummy 2']; return;
+    /* ───────────────────────────────────────────
+       NORMALISASI NOMOR WA → format 628xxx
+    ─────────────────────────────────────────── */
+    function normalizeWA(noWA) {
+      let num = noWA.replace(/\D/g, '');
+      if (num.startsWith('0062')) {
+        num = '62' + num.slice(4);
+      } else if (num.startsWith('08')) {
+        num = '628' + num.slice(2);
+      } else if (num.startsWith('8')) {
+        num = '628' + num.slice(1);
       }
+      // sudah 628xxx → biarkan
+      return num;
+    }
+
+    /* ───────────────────────────────────────────
+       KIRIM NOTIFIKASI WHATSAPP
+    ─────────────────────────────────────────── */
+    async function sendWhatsAppNotification({ nama, keperluan, dituju, noWA }) {
+      const to = normalizeWA(noWA);
+      const now = new Date();
+      const waktu = now.toLocaleString('id-ID', {
+        timeZone: 'Asia/Makassar',
+        day: '2-digit', month: 'long', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }).replace(/\./g, ':');
+
+      const message =
+`✅ *Registrasi Kunjungan Berhasil*
+━━━━━━━━━━━━━━━━━━━━
+🏛️ *LPPM Universitas Tadulako*
+
+Halo *${nama}*, kunjungan Anda telah tercatat di sistem kami.
+
+📋 *Detail Kunjungan:*
+• Keperluan  : ${keperluan}
+• Ditujukan  : ${dituju}
+• Waktu      : ${waktu} WITA
+
+Silakan menunggu, staf kami akan segera melayani Anda. 🙏
+
+_Pesan ini dikirim otomatis oleh sistem Buku Tamu LPPM Untad._`;
+
+      try {
+        await fetch(WA_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': WA_API_KEY
+          },
+          body: JSON.stringify({ to, message, media: [] })
+        });
+        console.log('Notifikasi WA terkirim ke', to);
+      } catch (err) {
+        // Non-blocking — form tetap sukses meski WA gagal
+        console.warn('Notifikasi WA gagal:', err);
+      }
+    }
+
+    /* ───────────────────────────────────────────
+       FETCH DAFTAR PEGAWAI
+    ─────────────────────────────────────────── */
+    let PEGAWAI_LIST = [];
+    async function fetchPegawaiList() {
       try {
         const response = await fetch(APPS_SCRIPT_URL + '?action=getPegawai');
         const result = await response.json();
         if (result.status === 'success' && Array.isArray(result.data)) PEGAWAI_LIST = result.data;
-      } catch (error) { console.error(error); }
+      } catch (error) { console.error('Gagal fetch pegawai:', error); }
     }
     fetchPegawaiList();
 
+    /* ───────────────────────────────────────────
+       PROGRESS BAR
+    ─────────────────────────────────────────── */
     const REQUIRED_FIELDS = ['namaLengkap','noWA','asalInstansi','kategoriTamu','keperluan','pegawaiDituju'];
 
     function updateProgress() {
@@ -411,8 +459,11 @@
       document.getElementById('progressFill').style.width = pct + '%';
       document.getElementById('progressPct').textContent = pct + '%';
       const fillEl = document.getElementById('progressFill');
-      if (pct === 100) fillEl.className = 'h-full bg-gradient-to-r from-green-500 to-green-400 w-full transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(34,197,94,0.4)]';
-      else fillEl.className = `h-full bg-gradient-to-r from-navy to-gold transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(200,151,42,0.4)]`;
+      if (pct === 100) {
+        fillEl.className = 'h-full bg-gradient-to-r from-green-500 to-green-400 w-full transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(34,197,94,0.4)]';
+      } else {
+        fillEl.className = 'h-full bg-gradient-to-r from-navy to-gold transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(200,151,42,0.4)]';
+      }
     }
 
     REQUIRED_FIELDS.forEach(id => {
@@ -423,14 +474,20 @@
       }
     });
 
+    /* ───────────────────────────────────────────
+       TOGGLE "LAINNYA" INPUT
+    ─────────────────────────────────────────── */
     function toggleOther(selectId, wrapId) {
       const sel = document.getElementById(selectId);
       const wrap = document.getElementById(wrapId);
       const input = document.getElementById(wrapId + 'Val');
-      if (sel.value === 'Lainnya') { wrap.classList.remove('hidden'); input.focus(); } 
+      if (sel.value === 'Lainnya') { wrap.classList.remove('hidden'); input.focus(); }
       else { wrap.classList.add('hidden'); input.value = ''; }
     }
 
+    /* ───────────────────────────────────────────
+       AUTOCOMPLETE PEGAWAI
+    ─────────────────────────────────────────── */
     const acInput = document.getElementById('pegawaiDituju');
     const acList  = document.getElementById('autocompleteList');
     const acWrap  = document.getElementById('autocompleteWrap');
@@ -444,14 +501,17 @@
       const matches = PEGAWAI_LIST.filter(p => p.toLowerCase().includes(q));
       if (!matches.length) { acList.classList.add('hidden'); return; }
 
-      matches.forEach((item, i) => {
+      matches.forEach((item) => {
         const div = document.createElement('div');
         div.className = 'px-4 py-3 text-sm text-gray-700 hover:bg-gold/10 hover:text-navy cursor-pointer flex items-center gap-3 transition-colors';
         const regex = new RegExp(`(${q})`, 'gi');
         const highlighted = item.replace(regex, '<strong class="text-navy font-bold">$1</strong>');
         div.innerHTML = `<div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center shrink-0"><i class="fas fa-user-tie text-gray-400 text-xs"></i></div> <span class="flex-1">${highlighted}</span>`;
         div.addEventListener('click', () => {
-          acInput.value = item; acList.classList.add('hidden'); updateProgress(); validateField('pegawaiDituju');
+          acInput.value = item;
+          acList.classList.add('hidden');
+          updateProgress();
+          validateField('pegawaiDituju');
         });
         acList.appendChild(div);
       });
@@ -461,31 +521,33 @@
     acInput.addEventListener('keydown', e => {
       const items = acList.querySelectorAll('div.px-4');
       if (!items.length || acList.classList.contains('hidden')) return;
-      if (e.key === 'ArrowDown') { e.preventDefault(); acActive = Math.min(acActive+1, items.length-1); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); acActive = Math.max(acActive-1, -1); }
-      else if (e.key === 'Enter' && acActive >= 0) { e.preventDefault(); items[acActive].click(); } 
+      if (e.key === 'ArrowDown') { e.preventDefault(); acActive = Math.min(acActive + 1, items.length - 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); acActive = Math.max(acActive - 1, -1); }
+      else if (e.key === 'Enter' && acActive >= 0) { e.preventDefault(); items[acActive].click(); }
       else if (e.key === 'Escape') { acList.classList.add('hidden'); }
       items.forEach((item, i) => {
-        if (i === acActive) { item.classList.add('bg-gold/10', 'text-navy'); item.scrollIntoView({ block: 'nearest' }); } 
+        if (i === acActive) { item.classList.add('bg-gold/10', 'text-navy'); item.scrollIntoView({ block: 'nearest' }); }
         else { item.classList.remove('bg-gold/10', 'text-navy'); }
       });
     });
     document.addEventListener('click', e => { if (!acWrap.contains(e.target)) acList.classList.add('hidden'); });
 
-    // File Handling
-    const fileInput = document.getElementById('fileUpload');
+    /* ───────────────────────────────────────────
+       FILE UPLOAD
+    ─────────────────────────────────────────── */
+    const fileInput  = document.getElementById('fileUpload');
     const uploadZone = document.getElementById('uploadZone');
-    const preview = document.getElementById('uploadPreview');
-    const prevThumb = document.getElementById('previewThumb');
-    const prevIcon = document.getElementById('previewIcon');
-    const prevName = document.getElementById('previewName');
-    const prevSize = document.getElementById('previewSize');
+    const preview    = document.getElementById('uploadPreview');
+    const prevThumb  = document.getElementById('previewThumb');
+    const prevIcon   = document.getElementById('previewIcon');
+    const prevName   = document.getElementById('previewName');
+    const prevSize   = document.getElementById('previewSize');
     let uploadedFile = null;
 
     fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(ev => uploadZone.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }));
-    ['dragenter', 'dragover'].forEach(ev => uploadZone.addEventListener(ev, () => { uploadZone.classList.add('bg-navy/10', 'border-navy'); uploadZone.classList.remove('bg-gray-50', 'border-gray-300'); }));
-    ['dragleave', 'drop'].forEach(ev => uploadZone.addEventListener(ev, () => { uploadZone.classList.remove('bg-navy/10', 'border-navy'); uploadZone.classList.add('bg-gray-50', 'border-gray-300'); }));
+    ['dragenter','dragover','dragleave','drop'].forEach(ev => uploadZone.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }));
+    ['dragenter','dragover'].forEach(ev => uploadZone.addEventListener(ev, () => { uploadZone.classList.add('bg-navy/10','border-navy'); uploadZone.classList.remove('bg-gray-50','border-gray-300'); }));
+    ['dragleave','drop'].forEach(ev => uploadZone.addEventListener(ev, () => { uploadZone.classList.remove('bg-navy/10','border-navy'); uploadZone.classList.add('bg-gray-50','border-gray-300'); }));
     uploadZone.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
 
     function handleFile(file) {
@@ -493,58 +555,95 @@
       const errEl = document.getElementById('err-file');
       if (file.size > 5 * 1024 * 1024) { errEl.classList.remove('hidden'); return; }
       errEl.classList.add('hidden');
-      uploadedFile = file; prevName.textContent = file.name; prevSize.textContent = formatSize(file.size);
+      uploadedFile = file;
+      prevName.textContent = file.name;
+      prevSize.textContent = formatSize(file.size);
       prevThumb.classList.add('hidden'); prevIcon.classList.add('hidden');
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = e => { prevThumb.src = e.target.result; prevThumb.classList.remove('hidden'); };
         reader.readAsDataURL(file);
-      } else if (file.type === 'application/pdf') { prevIcon.classList.remove('hidden'); }
+      } else if (file.type === 'application/pdf') {
+        prevIcon.classList.remove('hidden');
+      }
       preview.classList.remove('hidden'); preview.classList.add('flex');
     }
 
     function removeFile() { uploadedFile = null; fileInput.value = ''; preview.classList.add('hidden'); preview.classList.remove('flex'); }
-    function formatSize(bytes) { if (bytes < 1024) return bytes + ' B'; if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB'; return (bytes/(1024*1024)).toFixed(1) + ' MB'; }
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
 
+    /* ───────────────────────────────────────────
+       VALIDASI
+    ─────────────────────────────────────────── */
     function validateField(id) {
-      const el = document.getElementById(id); const errEl = document.getElementById('err-' + id);
-      if(!el) return true;
+      const el = document.getElementById(id);
+      const errEl = document.getElementById('err-' + id);
+      if (!el) return true;
       const ok = el.value.trim() !== '';
-      if (!ok) { errEl.classList.remove('hidden'); el.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/20'); el.classList.remove('border-gray-200', 'focus:border-navy-lt', 'focus:ring-navy-lt/10'); } 
-      else { errEl.classList.add('hidden'); el.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/20'); el.classList.add('border-gray-200', 'focus:border-navy-lt', 'focus:ring-navy-lt/10'); }
+      if (!ok) {
+        errEl.classList.remove('hidden');
+        el.classList.add('border-red-500','focus:border-red-500','focus:ring-red-500/20');
+        el.classList.remove('border-gray-200','focus:border-navy-lt','focus:ring-navy-lt/10');
+      } else {
+        errEl.classList.add('hidden');
+        el.classList.remove('border-red-500','focus:border-red-500','focus:ring-red-500/20');
+        el.classList.add('border-gray-200','focus:border-navy-lt','focus:ring-navy-lt/10');
+      }
       return ok;
     }
-    REQUIRED_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) { el.addEventListener('blur', () => validateField(id)); el.addEventListener('change', () => validateField(id)); } });
+    REQUIRED_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('blur', () => validateField(id));
+        el.addEventListener('change', () => validateField(id));
+      }
+    });
 
+    /* ───────────────────────────────────────────
+       SUBMIT FORM
+    ─────────────────────────────────────────── */
     document.getElementById('bukuTamuForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+
       let valid = true;
       REQUIRED_FIELDS.forEach(id => { if (!validateField(id)) valid = false; });
-      if (!valid) { 
-        showToast('Mohon lengkapi semua field yang diberi tanda bintang (*).', 'error'); 
+      if (!valid) {
+        showToast('Mohon lengkapi semua field yang diberi tanda bintang (*).', 'error');
         const firstErr = document.querySelector('.border-red-500');
-        if(firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; 
+        if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
       }
 
-      const kategori = resolveOther('kategoriTamu', 'otherKategoriVal');
-      const keperluan = resolveOther('keperluan', 'otherKeperluanVal');
+      const namaVal      = document.getElementById('namaLengkap').value.trim();
+      const noWAVal      = document.getElementById('noWA').value.trim();
+      const instansiVal  = document.getElementById('asalInstansi').value.trim();
+      const kategoriVal  = resolveOther('kategoriTamu', 'otherKategoriVal');
+      const keperluanVal = resolveOther('keperluan', 'otherKeperluanVal');
+      const deskripsiVal = document.getElementById('deskripsiKeperluan').value.trim();
+      const ditujuVal    = document.getElementById('pegawaiDituju').value.trim();
 
-      const btn = document.getElementById('submitBtn');
-      const btnText = document.getElementById('btnText');
-      const btnSpinner = document.getElementById('btnSpinner');
-      
-      btn.disabled = true; btn.classList.add('opacity-80', 'cursor-not-allowed');
-      btnText.classList.add('hidden'); btnSpinner.classList.remove('hidden');
+      const btn       = document.getElementById('submitBtn');
+      const btnText   = document.getElementById('btnText');
+      const btnSpinner= document.getElementById('btnSpinner');
+
+      btn.disabled = true;
+      btn.classList.add('opacity-80', 'cursor-not-allowed');
+      btnText.classList.add('hidden');
+      btnSpinner.classList.remove('hidden');
 
       try {
         const params = new URLSearchParams();
-        params.append('namaLengkap', document.getElementById('namaLengkap').value.trim());
-        params.append('noWA', document.getElementById('noWA').value.trim());
-        params.append('asalInstansi', document.getElementById('asalInstansi').value.trim());
-        params.append('kategoriTamu', kategori);
-        params.append('keperluan', keperluan);
-        params.append('deskripsiKeperluan', document.getElementById('deskripsiKeperluan').value.trim());
-        params.append('pegawaiDituju', document.getElementById('pegawaiDituju').value.trim());
+        params.append('namaLengkap',       namaVal);
+        params.append('noWA',              normalizeWA(noWAVal));
+        params.append('asalInstansi',      instansiVal);
+        params.append('kategoriTamu',      kategoriVal);
+        params.append('keperluan',         keperluanVal);
+        params.append('deskripsiKeperluan',deskripsiVal);
+        params.append('pegawaiDituju',     ditujuVal);
 
         if (uploadedFile) {
           const b64 = await toBase64(uploadedFile);
@@ -553,55 +652,103 @@
           params.append('fileType', uploadedFile.type);
         }
 
-        if(APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
-            await new Promise(r => setTimeout(r, 1500));
-            showSuccess({ nama: document.getElementById('namaLengkap').value.trim(), keperluan: keperluan, dituju: document.getElementById('pegawaiDituju').value.trim() });
-            return;
+        const res  = await fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
+        });
+        const json = await res.json();
+
+        if (json.status === 'success') {
+          // Tampilkan halaman sukses
+          showSuccess({ nama: namaVal, keperluan: keperluanVal, dituju: ditujuVal });
+          // Kirim notifikasi WA (non-blocking)
+          sendWhatsAppNotification({ nama: namaVal, keperluan: keperluanVal, dituju: ditujuVal, noWA: noWAVal });
+        } else {
+          throw new Error(json.message || 'Gagal menyimpan data.');
         }
 
-        const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
-        const json = await res.json();
-        if (json.status === 'success') { showSuccess({ nama: document.getElementById('namaLengkap').value.trim(), keperluan: keperluan, dituju: document.getElementById('pegawaiDituju').value.trim() }); } 
-        else { throw new Error(json.message || 'Gagal menyimpan data.'); }
       } catch (err) {
         showToast('Gagal mengirim: ' + err.message, 'error');
-        btn.disabled = false; btn.classList.remove('opacity-80', 'cursor-not-allowed'); btnText.classList.remove('hidden'); btnSpinner.classList.add('hidden');
+        btn.disabled = false;
+        btn.classList.remove('opacity-80', 'cursor-not-allowed');
+        btnText.classList.remove('hidden');
+        btnSpinner.classList.add('hidden');
       }
     });
 
+    /* ───────────────────────────────────────────
+       HELPERS
+    ─────────────────────────────────────────── */
     function resolveOther(selectId, otherId) {
       const sel = document.getElementById(selectId);
-      if (sel.value === 'Lainnya') { const other = document.getElementById(otherId); return other ? (other.value.trim() || 'Lainnya') : 'Lainnya'; }
+      if (sel.value === 'Lainnya') {
+        const other = document.getElementById(otherId);
+        return other ? (other.value.trim() || 'Lainnya') : 'Lainnya';
+      }
       return sel.value;
     }
-    function toBase64(file) { return new Promise((res, rej) => { const reader = new FileReader(); reader.onload  = () => res(reader.result); reader.onerror = rej; reader.readAsDataURL(file); }); }
+
+    function toBase64(file) {
+      return new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onload  = () => res(reader.result);
+        reader.onerror = rej;
+        reader.readAsDataURL(file);
+      });
+    }
 
     function showSuccess({ nama, keperluan, dituju }) {
-      document.getElementById('bukuTamuForm').classList.add('hidden'); document.getElementById('progressContainer').classList.add('hidden');
-      const now = new Date(); const optionsTime = { timeZone: 'Asia/Makassar', day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' };
+      document.getElementById('bukuTamuForm').classList.add('hidden');
+      document.getElementById('progressContainer').classList.add('hidden');
+      const now = new Date();
+      const optionsTime = { timeZone: 'Asia/Makassar', day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' };
       const timeWITA = now.toLocaleString('id-ID', optionsTime).replace(/\./g, ':');
-      document.getElementById('sNama').textContent = nama; document.getElementById('sKeperluan').textContent = keperluan; document.getElementById('sDituju').textContent = dituju; document.getElementById('sWaktu').textContent = timeWITA + ' WITA';
+      document.getElementById('sNama').textContent      = nama;
+      document.getElementById('sKeperluan').textContent = keperluan;
+      document.getElementById('sDituju').textContent    = dituju;
+      document.getElementById('sWaktu').textContent     = timeWITA + ' WITA';
       const successEl = document.getElementById('successScreen');
-      successEl.classList.remove('hidden'); successEl.classList.add('block');
-      window.scrollTo({ top:0, behavior:'smooth' });
+      successEl.classList.remove('hidden');
+      successEl.classList.add('block');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function resetForm() {
-      const form = document.getElementById('bukuTamuForm'); form.reset(); form.classList.remove('hidden');
+      const form = document.getElementById('bukuTamuForm');
+      form.reset();
+      form.classList.remove('hidden');
       document.getElementById('progressContainer').classList.remove('hidden');
-      document.getElementById('successScreen').classList.add('hidden'); document.getElementById('successScreen').classList.remove('block');
-      const btn = document.getElementById('submitBtn'); btn.disabled = false; btn.classList.remove('opacity-80', 'cursor-not-allowed'); document.getElementById('btnText').classList.remove('hidden'); document.getElementById('btnSpinner').classList.add('hidden');
-      removeFile(); updateProgress(); document.getElementById('otherKategori').classList.add('hidden'); document.getElementById('otherKeperluan').classList.add('hidden');
-      window.scrollTo({ top:0, behavior:'smooth' });
+      document.getElementById('successScreen').classList.add('hidden');
+      document.getElementById('successScreen').classList.remove('block');
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = false;
+      btn.classList.remove('opacity-80', 'cursor-not-allowed');
+      document.getElementById('btnText').classList.remove('hidden');
+      document.getElementById('btnSpinner').classList.add('hidden');
+      removeFile();
+      updateProgress();
+      document.getElementById('otherKategori').classList.add('hidden');
+      document.getElementById('otherKeperluan').classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     let toastTimer;
-    function showToast(msg, type='info') {
-      const t = document.getElementById('toast'); const m = document.getElementById('toastMsg'); const i = document.getElementById('toastIcon');
+    function showToast(msg, type = 'info') {
+      const t = document.getElementById('toast');
+      const m = document.getElementById('toastMsg');
+      const i = document.getElementById('toastIcon');
       m.textContent = msg;
-      if(type === 'error') { t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-full shadow-[0_10px_30px_rgba(220,38,38,0.4)] flex items-center gap-3 text-sm font-semibold transition-all duration-400 z-[9999]'; i.className = 'fas fa-exclamation-triangle text-white'; } 
-      else { t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-navy text-white px-6 py-3 rounded-full shadow-[0_10px_30px_rgba(13,43,78,0.4)] flex items-center gap-3 text-sm font-semibold transition-all duration-400 z-[9999]'; i.className = 'fas fa-check-circle text-green-400'; }
-      t.classList.remove('translate-y-24', 'opacity-0'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.classList.add('translate-y-24', 'opacity-0'); }, 4000);
+      if (type === 'error') {
+        t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-full shadow-[0_10px_30px_rgba(220,38,38,0.4)] flex items-center gap-3 text-sm font-semibold transition-all duration-400 z-[9999]';
+        i.className = 'fas fa-exclamation-triangle text-white';
+      } else {
+        t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-navy text-white px-6 py-3 rounded-full shadow-[0_10px_30px_rgba(13,43,78,0.4)] flex items-center gap-3 text-sm font-semibold transition-all duration-400 z-[9999]';
+        i.className = 'fas fa-check-circle text-green-400';
+      }
+      t.classList.remove('translate-y-24', 'opacity-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { t.classList.add('translate-y-24', 'opacity-0'); }, 4000);
     }
   </script>
 </body>
