@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Buku Tamu LPPM</title>
+
+  <!-- ⚙️ GANTI dengan URL Apps Script Web App Anda setelah deploy -->
+  <script>
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDsrHUTJ4kBKlxQUaU3d3DSK0EhfNsZlxxW8RgXXMLQPK8HvrNbY9hL-UB4R8BO3YK/exec';
+  </script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Tailwind & ApexCharts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          colors: {
+            navy: { DEFAULT: '#0d2b4e', mid: '#1a3a5c', lt: '#254e7a' },
+            gold: { DEFAULT: '#c8972a', lt: '#e8b84b' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#f4f7fb] text-gray-800 antialiased min-h-screen flex flex-col">
+
+  <nav class="bg-gradient-to-r from-navy to-navy-mid shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-gold-lt shadow-md overflow-hidden">
+            <img src="https://lh3.googleusercontent.com/d/16sowD23pA_OKAT1x09pjIkgBo7EqfSsN" alt="Logo" class="w-8 h-8 object-contain" onerror="this.src='https://via.placeholder.com/50'"/>
+          </div>
+          <div>
+            <h1 class="text-white font-bold tracking-wide">Dashboard Admin</h1>
+            <p class="text-gold-lt text-[10px] uppercase font-semibold tracking-wider">LPPM Universitas Tadulako</p>
+          </div>
+        </div>
+        <div>
+          <button onclick="fetchDashboardData()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border border-white/20 backdrop-blur-sm">
+            <i class="fas fa-sync-alt" id="refreshIcon"></i> <span class="hidden sm:inline">Refresh Data</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <!-- Loading Overlay -->
+    <div id="loader" class="flex flex-col items-center justify-center py-20">
+      <div class="w-12 h-12 border-4 border-navy border-t-gold rounded-full animate-spin mb-4"></div>
+      <p class="text-gray-500 font-medium animate-pulse">Menarik data dari Spreadsheet...</p>
+    </div>
+
+    <div id="dashboardContent" class="hidden space-y-6">
+      
+      <!-- Top Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- Card Hari Ini -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md transition-shadow relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-20 h-20 bg-green-50 rounded-full blur-2xl z-0"></div>
+          <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-xl z-10 shrink-0">
+            <i class="fas fa-user-clock"></i>
+          </div>
+          <div class="z-10">
+            <p class="text-xs text-gray-500 font-medium">Hari Ini</p>
+            <h3 class="text-2xl font-bold text-navy" id="statToday">0</h3>
+          </div>
+        </div>
+        
+        <!-- Card Minggu Ini -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md transition-shadow relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-20 h-20 bg-blue-50 rounded-full blur-2xl z-0"></div>
+          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl z-10 shrink-0">
+            <i class="fas fa-calendar-week"></i>
+          </div>
+          <div class="z-10">
+            <p class="text-xs text-gray-500 font-medium">Minggu Ini</p>
+            <h3 class="text-2xl font-bold text-navy" id="statWeek">0</h3>
+          </div>
+        </div>
+
+        <!-- Card Bulan Ini -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md transition-shadow relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-20 h-20 bg-purple-50 rounded-full blur-2xl z-0"></div>
+          <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-xl z-10 shrink-0">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+          <div class="z-10">
+            <p class="text-xs text-gray-500 font-medium">Bulan Ini</p>
+            <h3 class="text-2xl font-bold text-navy" id="statMonth">0</h3>
+          </div>
+        </div>
+
+        <!-- Card Tahun Ini -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md transition-shadow relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-20 h-20 bg-orange-50 rounded-full blur-2xl z-0"></div>
+          <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-xl z-10 shrink-0">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="z-10">
+            <p class="text-xs text-gray-500 font-medium">Tahun Ini</p>
+            <h3 class="text-2xl font-bold text-navy" id="statYear">0</h3>
+          </div>
+        </div>
+
+        <!-- Card Total -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md transition-shadow relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-20 h-20 bg-navy/5 rounded-full blur-2xl z-0"></div>
+          <div class="w-12 h-12 bg-navy/10 text-navy rounded-xl flex items-center justify-center text-xl z-10 shrink-0">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="z-10">
+            <p class="text-xs text-gray-500 font-medium">Total Tamu</p>
+            <h3 class="text-2xl font-bold text-navy" id="statTotal">0</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Chart: Tren Kunjungan Bulanan -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-navy flex items-center gap-2"><i class="fas fa-chart-line text-gold"></i> Tren Kunjungan Tahun Ini</h2>
+          </div>
+          <div id="chartMonthly" class="w-full h-72"></div>
+        </div>
+
+        <!-- Chart: Jam Sibuk -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-navy flex items-center gap-2"><i class="fas fa-clock text-gold"></i> Waktu Paling Sibuk</h2>
+          </div>
+          <div id="chartHours" class="w-full h-72"></div>
+        </div>
+
+        <!-- Chart: Kategori -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-navy flex items-center gap-2"><i class="fas fa-chart-pie text-gold"></i> Distribusi Kategori Tamu</h2>
+          </div>
+          <div id="chartCategory" class="w-full h-72 flex justify-center"></div>
+        </div>
+
+        <!-- Chart: Top Instansi -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-navy flex items-center gap-2"><i class="fas fa-building text-gold"></i> Top 5 Instansi Kunjungan</h2>
+          </div>
+          <div id="chartInstansi" class="w-full h-72"></div>
+        </div>
+
+      </div>
+      
+      <!-- Data Table Section -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          <h2 class="text-lg font-bold text-navy flex items-center gap-2 whitespace-nowrap"><i class="fas fa-table text-gold"></i> Riwayat Kunjungan</h2>
+          
+          <!-- Filter Controls -->
+          <div class="flex flex-col sm:flex-row flex-wrap items-center gap-3 w-full md:w-auto">
+            
+            <!-- Kolom Pencarian -->
+            <div class="relative w-full sm:w-auto">
+              <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <input type="text" id="searchInput" placeholder="Cari nama, instansi..." class="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-navy-lt/20 focus:border-navy-lt outline-none w-full sm:w-56 transition-all">
+            </div>
+            
+            <!-- Dropdown Filter Tanggal -->
+            <select id="filterPeriode" class="w-full sm:w-auto px-4 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-navy-lt/20 focus:border-navy-lt outline-none cursor-pointer bg-white">
+              <option value="semua">Semua Waktu</option>
+              <option value="hari_ini">Hari Ini</option>
+              <option value="minggu_ini">Minggu Ini</option>
+              <option value="bulan_ini">Bulan Ini</option>
+              <option value="tahun_ini">Tahun Ini</option>
+              <option value="rentang">Rentang Tanggal Custom...</option>
+            </select>
+            
+            <!-- Range Tanggal Custom (Default: Sembunyi) -->
+            <div id="rentangWrapper" class="hidden items-center gap-2 w-full sm:w-auto animate-fade-in">
+              <input type="date" id="dateStart" class="w-full sm:w-auto px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none focus:border-navy-lt text-gray-600">
+              <span class="text-gray-400 text-sm">s/d</span>
+              <input type="date" id="dateEnd" class="w-full sm:w-auto px-3 py-2 border border-gray-200 rounded-xl text-sm outline-none focus:border-navy-lt text-gray-600">
+            </div>
+            
+          </div>
+        </div>
+        
+        <!-- Table Wrapper -->
+        <div class="overflow-x-auto rounded-xl border border-gray-100 max-h-[500px]">
+          <table class="w-full text-left text-sm text-gray-600">
+            <thead class="bg-gray-50 text-navy font-semibold border-b border-gray-100 sticky top-0 z-10 shadow-sm">
+              <tr>
+                <th class="px-4 py-3.5 whitespace-nowrap">Waktu (WITA)</th>
+                <th class="px-4 py-3.5">Nama & Kontak</th>
+                <th class="px-4 py-3.5 min-w-[150px]">Instansi</th>
+                <th class="px-4 py-3.5 min-w-[200px]">Kategori & Keperluan</th>
+                <th class="px-4 py-3.5 min-w-[150px]">Dituju</th>
+                <th class="px-4 py-3.5 text-center">Lampiran</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody" class="divide-y divide-gray-100 bg-white">
+              <!-- Data rows rendered here -->
+            </tbody>
+          </table>
+          
+          <!-- State Kosong / Loading / Not Found -->
+          <div id="tableEmpty" class="hidden py-16 text-center flex-col items-center gap-3">
+            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-2xl text-gray-300 mx-auto">
+              <i class="fas fa-folder-open"></i>
+            </div>
+            <p class="text-gray-500">Tidak ada data kunjungan yang sesuai dengan filter.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Variables global untuk menyimpan instance chart agar bisa di-update/destroy
+    let chartMonthly, chartHours, chartCategory, chartInstansi;
+    let allGuestData = []; // Menyimpan raw array tamu untuk filtering
+
+    async function fetchDashboardData() {
+      const loader = document.getElementById('loader');
+      const content = document.getElementById('dashboardContent');
+      const refreshIcon = document.getElementById('refreshIcon');
+      
+      // UI Loading state
+      loader.classList.remove('hidden');
+      content.classList.add('hidden');
+      refreshIcon.classList.add('animate-spin');
+
+      if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+        alert('Mohon masukkan URL Apps Script di dalam source code.');
+        return;
+      }
+
+      try {
+        const response = await fetch(APPS_SCRIPT_URL + '?action=getDashboardData');
+        const res = await response.json();
+
+        if (res.status === 'success') {
+          renderDashboard(res.data);
+        } else {
+          alert('Error: ' + res.message);
+        }
+      } catch (err) {
+        alert('Gagal terhubung ke server.');
+        console.error(err);
+      } finally {
+        loader.classList.add('hidden');
+        content.classList.remove('hidden');
+        refreshIcon.classList.remove('animate-spin');
+      }
+    }
+
+    function renderDashboard(data) {
+      // Kalkulasi statistik dari raw data (tabelData)
+      let countToday = 0;
+      let countWeek = 0;
+      let countMonth = 0;
+      let countYear = 0;
+      let countTotal = data.totalCount || 0;
+
+      if (data.tabelData && data.tabelData.length > 0) {
+        countTotal = data.tabelData.length;
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        
+        // Asumsi minggu dimulai dari Senin
+        const dayOfWeek = now.getDay() || 7; 
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - dayOfWeek + 1);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+
+        data.tabelData.forEach(row => {
+          const rowDateObj = new Date(row.waktu);
+          const rowDateOnly = new Date(rowDateObj.getFullYear(), rowDateObj.getMonth(), rowDateObj.getDate());
+
+          if (rowDateOnly.getTime() === today.getTime()) countToday++;
+          if (rowDateOnly >= weekStart && rowDateOnly <= weekEnd) countWeek++;
+          if (rowDateObj.getMonth() === now.getMonth() && rowDateObj.getFullYear() === now.getFullYear()) countMonth++;
+          if (rowDateObj.getFullYear() === now.getFullYear()) countYear++;
+        });
+      } else {
+        countToday = data.todayCount || 0;
+      }
+
+      // Update Cards
+      document.getElementById('statToday').textContent = countToday;
+      document.getElementById('statWeek').textContent = countWeek;
+      document.getElementById('statMonth').textContent = countMonth;
+      document.getElementById('statYear').textContent = countYear;
+      document.getElementById('statTotal').textContent = countTotal;
+
+      // 1. Chart Monthly (Area Chart)
+      const optMonthly = {
+        series: [{ name: 'Kunjungan', data: data.chartBulan }],
+        chart: { type: 'area', height: 280, fontFamily: 'Plus Jakarta Sans, sans-serif', toolbar: { show: false } },
+        colors: ['#254e7a'],
+        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 90, 100] } },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 3 },
+        xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'], tooltip: { enabled: false } },
+        yaxis: { labels: { formatter: (val) => { return Math.floor(val) } } }
+      };
+      if(chartMonthly) chartMonthly.destroy();
+      chartMonthly = new ApexCharts(document.querySelector("#chartMonthly"), optMonthly);
+      chartMonthly.render();
+
+      // 2. Chart Jam Sibuk (Bar Chart)
+      // Ambil jam dari 06:00 sampai 18:00 (Indeks 6 ke 18) untuk chart yang lebih relevan (jam kantor)
+      const workHours = data.chartJam.slice(6, 19);
+      const optHours = {
+        series: [{ name: 'Jumlah Tamu', data: workHours }],
+        chart: { type: 'bar', height: 280, fontFamily: 'Plus Jakarta Sans, sans-serif', toolbar: { show: false } },
+        colors: ['#c8972a'],
+        plotOptions: { bar: { borderRadius: 4, dataLabels: { position: 'top' } } },
+        dataLabels: { enabled: true, offsetY: -20, style: { fontSize: '12px', colors: ["#6b7f96"] } },
+        xaxis: { categories: ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'], tooltip: { enabled: false } }
+      };
+      if(chartHours) chartHours.destroy();
+      chartHours = new ApexCharts(document.querySelector("#chartHours"), optHours);
+      chartHours.render();
+
+      // 3. Chart Kategori (Donut Chart)
+      const optCategory = {
+        series: data.chartKategori.series,
+        chart: { type: 'donut', height: 290, fontFamily: 'Plus Jakarta Sans, sans-serif' },
+        labels: data.chartKategori.labels,
+        colors: ['#0d2b4e', '#c8972a', '#2ea368', '#d94040', '#6b7f96', '#254e7a', '#e8b84b'],
+        stroke: { width: 2, colors: ['#fff'] },
+        plotOptions: { pie: { donut: { size: '65%' } } },
+        dataLabels: { enabled: false },
+        legend: { position: 'bottom', fontSize: '13px' }
+      };
+      if(chartCategory) chartCategory.destroy();
+      chartCategory = new ApexCharts(document.querySelector("#chartCategory"), optCategory);
+      chartCategory.render();
+
+      // 4. Chart Instansi (Horizontal Bar)
+      const optInstansi = {
+        series: [{ name: 'Total', data: data.chartInstansi.series }],
+        chart: { type: 'bar', height: 280, fontFamily: 'Plus Jakarta Sans, sans-serif', toolbar: { show: false } },
+        plotOptions: { bar: { borderRadius: 4, horizontal: true, distributed: true } },
+        colors: ['#0d2b4e', '#1a3a5c', '#254e7a', '#c8972a', '#e8b84b'],
+        dataLabels: { enabled: true },
+        xaxis: { categories: data.chartInstansi.labels, labels: { formatter: (val) => { return Math.floor(val) } } },
+        legend: { show: false }
+      };
+      if(chartInstansi) chartInstansi.destroy();
+      chartInstansi = new ApexCharts(document.querySelector("#chartInstansi"), optInstansi);
+      chartInstansi.render();
+      
+      if(data.tabelData) {
+        allGuestData = data.tabelData;
+        applyFilters(); // Eksekusi render tabel dengan filter default (Semua)
+      }
+    }
+    
+    // === DOM Filter ===
+    const searchInput = document.getElementById('searchInput');
+    const filterPeriode = document.getElementById('filterPeriode');
+    const rentangWrapper = document.getElementById('rentangWrapper');
+    const dateStart = document.getElementById('dateStart');
+    const dateEnd = document.getElementById('dateEnd');
+    
+    // === Event Listeners Filter ===
+    searchInput.addEventListener('input', applyFilters);
+    filterPeriode.addEventListener('change', (e) => {
+      if(e.target.value === 'rentang') {
+        rentangWrapper.classList.remove('hidden');
+        rentangWrapper.classList.add('flex');
+      } else {
+        rentangWrapper.classList.add('hidden');
+        rentangWrapper.classList.remove('flex');
+      }
+      applyFilters();
+    });
+    dateStart.addEventListener('change', applyFilters);
+    dateEnd.addEventListener('change', applyFilters);
+    
+    function applyFilters() {
+      const searchStr = searchInput.value.toLowerCase();
+      const periode = filterPeriode.value;
+      const dStart = dateStart.value;
+      const dEnd = dateEnd.value;
+
+      const now = new Date();
+      // Standarisasi hari ini jam 00:00:00
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      // Kalkulasi awal dan akhir minggu (Asumsi Minggu mulai hari Senin)
+      const dayOfWeek = now.getDay() || 7; 
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - dayOfWeek + 1);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+
+      const filteredData = allGuestData.filter(row => {
+        // 1. Logika Filter Teks / Pencarian (Mencari di banyak kolom sekaligus)
+        const searchableText = (row.nama + ' ' + row.instansi + ' ' + row.keperluan + ' ' + row.kategori + ' ' + row.dituju + ' ' + row.noWA).toLowerCase();
+        if (searchStr && !searchableText.includes(searchStr)) return false;
+
+        // 2. Logika Filter Periode Tanggal
+        if (periode === 'semua') return true;
+        
+        const rowDateObj = new Date(row.waktu);
+        const rowDateOnly = new Date(rowDateObj.getFullYear(), rowDateObj.getMonth(), rowDateObj.getDate());
+
+        if (periode === 'hari_ini') {
+          return rowDateOnly.getTime() === today.getTime();
+        } 
+        else if (periode === 'minggu_ini') {
+          return rowDateOnly >= weekStart && rowDateOnly <= weekEnd;
+        } 
+        else if (periode === 'bulan_ini') {
+          return rowDateObj.getMonth() === now.getMonth() && rowDateObj.getFullYear() === now.getFullYear();
+        } 
+        else if (periode === 'tahun_ini') {
+          return rowDateObj.getFullYear() === now.getFullYear();
+        } 
+        else if (periode === 'rentang') {
+          if (!dStart && !dEnd) return true; // Jika rentang kosong, kembalikan semua data yg cocok dengan search
+          
+          const s = dStart ? new Date(dStart).setHours(0,0,0,0) : -Infinity;
+          const e = dEnd ? new Date(dEnd).setHours(23,59,59,999) : Infinity;
+          return rowDateObj.getTime() >= s && rowDateObj.getTime() <= e;
+        }
+        return true;
+      });
+
+      renderTable(filteredData);
+    }
+    
+    function renderTable(dataArray) {
+      const tbody = document.getElementById('tableBody');
+      const empty = document.getElementById('tableEmpty');
+      tbody.innerHTML = ''; // Kosongkan tabel dulu
+      
+      // Jika data tidak ada
+      if(dataArray.length === 0) {
+        empty.classList.remove('hidden');
+        empty.classList.add('flex');
+        return;
+      }
+      
+      empty.classList.add('hidden');
+      empty.classList.remove('flex');
+
+      // Iterasi dan Render Baris
+      dataArray.forEach(row => {
+        // Format Tanggal jadi WITA
+        const dateStr = new Date(row.waktu).toLocaleString('id-ID', {
+           timeZone: 'Asia/Makassar', day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'
+        }).replace(/\./g, ':');
+
+        // Render tombol lampiran hanya jika link benar (mengandung http)
+        const lampiranHtml = row.lampiran && row.lampiran.startsWith('http') 
+            ? `<a href="${row.lampiran}" target="_blank" class="w-8 h-8 mx-auto rounded-full bg-navy/10 text-navy hover:bg-navy hover:text-white flex items-center justify-center transition-colors shadow-sm" title="Lihat Dokumen"><i class="fas fa-paperclip"></i></a>` 
+            : `<span class="text-gray-300 text-xs">-</span>`;
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-navy/5 transition-colors group';
+        tr.innerHTML = `
+          <td class="px-4 py-3 whitespace-nowrap text-[11px] text-gray-500 font-mono align-top pt-4">${dateStr}</td>
+          <td class="px-4 py-3 align-top">
+            <span class="font-bold text-navy block group-hover:text-gold-lt transition-colors mb-0.5">${row.nama}</span>
+            <span class="text-xs text-gray-400 flex items-center gap-1"><i class="fab fa-whatsapp"></i> ${row.noWA}</span>
+          </td>
+          <td class="px-4 py-3 font-medium text-xs align-top pt-4">${row.instansi}</td>
+          <td class="px-4 py-3 align-top">
+            <span class="inline-block px-2 py-0.5 bg-gold/15 border border-gold/20 text-gold-lt rounded text-[10px] font-bold uppercase tracking-wider mb-1.5">${row.kategori}</span>
+            <span class="text-[12px] text-gray-600 block leading-tight line-clamp-2" title="${row.keperluan}">${row.keperluan}</span>
+          </td>
+          <td class="px-4 py-3 text-xs text-gray-600 align-top pt-4 font-semibold">${row.dituju}</td>
+          <td class="px-4 py-3 text-center align-top pt-4">${lampiranHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Load data on start
+    fetchDashboardData();
+  </script>
+</body>
+</html>

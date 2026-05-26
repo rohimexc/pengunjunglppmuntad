@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buku Tamu — LPPM Universitas Tadulako</title>
+
+  <!-- ⚙️ GANTI dengan URL Apps Script Web App Anda setelah deploy -->
+  <script>
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwDsrHUTJ4kBKlxQUaU3d3DSK0EhfNsZlxxW8RgXXMLQPK8HvrNbY9hL-UB4R8BO3YK/exec';
+  </script>
+
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['Lora', 'serif'],
+          },
+          colors: {
+            navy: { DEFAULT: '#0d2b4e', mid: '#1a3a5c', lt: '#254e7a' },
+            gold: { DEFAULT: '#c8972a', lt: '#e8b84b', pale: '#fdf3dc' }
+          },
+          animation: {
+            'float': 'float 18s ease-in-out infinite alternate',
+            'float-delayed': 'float 18s ease-in-out -8s infinite alternate',
+            'logo-pulse': 'logo-pulse 4s ease-in-out infinite',
+            'card-in': 'card-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards',
+            'shimmer': 'shimmer 2.5s linear infinite',
+            'success-pop': 'success-pop 0.6s cubic-bezier(.34,1.56,.64,1) 0.1s both',
+            'fade-in': 'fade-in 0.4s ease-out forwards',
+            'spin-slow': 'spin 1.5s linear infinite',
+          },
+          keyframes: {
+            float: { '0%': { transform: 'translate(0,0) scale(1)' }, '100%': { transform: 'translate(30px,20px) scale(1.1)' } },
+            'card-in': { '0%': { opacity: '0', transform: 'translateY(24px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            'shimmer': { '100%': { backgroundPosition: '200% center' } },
+            'success-pop': { '0%': { transform: 'scale(0.5)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+            'fade-in': { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar & Utility Overrides */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #b0bfcf; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6b7f96; }
+    html { scroll-behavior: smooth; }
+    body { background-color: #f4f7fb; overflow-x: hidden; }
+
+    /* Custom select chevron */
+    .custom-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7f96' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 12px;
+    }
+  </style>
+</head>
+<body class="text-gray-700 antialiased min-h-screen relative">
+
+  <div class="fixed inset-0 z-[-2] bg-[#f4f7fb]">
+    <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_80%_60%_at_10%_0%,rgba(13,43,78,.06)_0%,transparent_70%)]"></div>
+    <div class="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(ellipse_60%_50%_at_90%_100%,rgba(200,151,42,.06)_0%,transparent_70%)]"></div>
+  </div>
+  <div class="fixed -top-24 -left-20 w-96 h-96 bg-navy/5 rounded-full blur-3xl animate-float pointer-events-none z-[-1]"></div>
+  <div class="fixed -bottom-16 -right-16 w-80 h-80 bg-gold/10 rounded-full blur-3xl animate-float-delayed pointer-events-none z-[-1]"></div>
+
+  <header class="relative bg-gradient-to-br from-navy via-navy-mid to-navy-lt px-6 py-8 md:py-12 shadow-[0_10px_40px_rgba(13,43,78,0.25)] overflow-hidden">
+    <!-- Header Pattern Overlay -->
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: url(&quot;data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E&quot;);"></div>
+    
+    <div class="max-w-4xl mx-auto flex flex-col items-center relative z-10 text-center">
+      <!-- Logo -->
+      <img
+        src="https://lh3.googleusercontent.com/d/16sowD23pA_OKAT1x09pjIkgBo7EqfSsN"
+        alt="Logo LPPM Untad"
+        class="w-20 md:w-24 h-auto object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)] mb-4 md:mb-5"
+        onerror="this.src='https://via.placeholder.com/96/1a3a5c/c8972a?text=LPPM'"
+      />
+      <!-- Teks Utama -->
+      <div class="mb-6 md:mb-8">
+        <p class="text-[10px] md:text-xs tracking-[0.2em] uppercase text-gold-lt font-bold mb-2 drop-shadow-md">Lembaga Penelitian dan Pengabdian Kepada Masyarakat</p>
+        <h1 class="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-white leading-tight drop-shadow-lg">Universitas Tadulako</h1>
+      </div>
+      
+      <!-- Shape Sapaan & Jam Realtime -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 w-full">
+        <!-- Shape Greeting (Glassmorphism) -->
+        <div class="bg-white/10 border border-white/20 backdrop-blur-md rounded-2xl px-5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex items-center gap-2.5 transition-all hover:bg-white/15">
+          <i class="fas fa-hand-sparkles text-gold-lt text-base animate-pulse"></i>
+          <p id="dynamicGreeting" class="text-xs md:text-sm text-white font-medium tracking-wide"></p>
+        </div>
+        <!-- Clock Badge -->
+        <div class="inline-flex items-center gap-2 bg-navy-mid/60 border border-white/10 backdrop-blur-md rounded-2xl px-5 py-2.5 text-white text-xs md:text-sm font-mono shadow-inner">
+          <i class="far fa-clock text-gold-lt"></i>
+          <span id="realtimeClock" class="font-semibold tracking-wider">00:00:00 WITA</span>
+        </div>
+      </div>
+    </div>
+    <!-- Gold Bottom Strip -->
+    <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent opacity-80"></div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 py-8 md:py-12 mb-10">
+
+    <!-- Progress Indicator -->
+    <div id="progressContainer" class="flex items-center gap-4 mb-8 bg-white px-5 py-3 rounded-2xl shadow-sm border border-gray-100/50">
+      <span class="text-xs font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap"><i class="fas fa-tasks mr-1"></i> Kelengkapan</span>
+      <div class="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
+        <div id="progressFill" class="h-full bg-gradient-to-r from-navy to-gold w-0 transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(200,151,42,0.4)]"></div>
+      </div>
+      <span id="progressPct" class="text-sm font-extrabold text-navy min-w-[3rem] text-right">0%</span>
+    </div>
+
+    <!-- Success Screen -->
+    <div id="successScreen" class="hidden text-center py-16 px-4">
+      <div class="w-24 h-24 mx-auto bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center text-white text-5xl shadow-[0_0_0_12px_rgba(34,197,94,0.15),0_10px_30px_rgba(34,197,94,0.3)] animate-success-pop mb-8">
+        <i class="fas fa-check"></i>
+      </div>
+      <h2 class="font-serif text-3xl md:text-4xl text-navy font-bold mb-4 animate-fade-in" style="animation-delay: 0.2s;">Pendaftaran Berhasil!</h2>
+      <p class="text-gray-500 md:text-lg max-w-lg mx-auto leading-relaxed mb-8 animate-fade-in" style="animation-delay: 0.3s;">
+        Terima kasih, data kunjungan Anda telah dicatat oleh sistem. Silakan menunggu, petugas kami akan segera melayani Anda.
+      </p>
+      
+      <div class="inline-flex flex-col gap-2 bg-white/60 backdrop-blur border border-gold/30 rounded-2xl p-6 shadow-lg mb-10 text-sm md:text-base text-left animate-fade-in w-full max-w-md" style="animation-delay: 0.4s;">
+        <div class="flex border-b border-gray-100 pb-2"><span class="w-28 text-gray-500">Nama</span><strong id="sNama" class="text-navy flex-1"></strong></div>
+        <div class="flex border-b border-gray-100 pb-2"><span class="w-28 text-gray-500">Keperluan</span><strong id="sKeperluan" class="text-navy flex-1"></strong></div>
+        <div class="flex border-b border-gray-100 pb-2"><span class="w-28 text-gray-500">Dituju</span><strong id="sDituju" class="text-navy flex-1"></strong></div>
+        <div class="flex pt-1"><span class="w-28 text-gray-500">Waktu</span><strong id="sWaktu" class="text-navy flex-1"></strong></div>
+      </div>
+
+      <div class="animate-fade-in" style="animation-delay: 0.5s;">
+        <button onclick="resetForm()" class="bg-navy hover:bg-navy-lt text-white px-8 py-3.5 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 inline-flex items-center gap-2">
+          <i class="fas fa-plus-circle"></i> Daftar Tamu Baru
+        </button>
+      </div>
+    </div>
+
+    <form id="bukuTamuForm" class="space-y-6" novalidate>
+      <!-- Card 1: Data Diri -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-card-in" style="animation-delay: 0.1s;">
+        <div class="bg-gradient-to-r from-navy to-navy-mid px-6 py-4 flex items-center gap-4 border-b-[3px] border-gold">
+          <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-gold-lt text-lg backdrop-blur-sm shrink-0">
+            <i class="fas fa-id-badge"></i>
+          </div>
+          <div>
+            <h2 class="text-white font-bold text-lg tracking-wide">Data Diri Tamu</h2>
+            <p class="text-white/60 text-xs">Informasi identitas pengunjung</p>
+          </div>
+        </div>
+        
+        <div class="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="md:col-span-2 group">
+            <label for="namaLengkap" class="block text-sm font-bold text-navy mb-1.5 group-focus-within:text-navy-lt transition-colors">
+              <i class="fas fa-user text-gray-400 mr-1.5"></i> Nama Lengkap <span class="text-red-500">*</span>
+            </label>
+            <input type="text" id="namaLengkap" name="namaLengkap" placeholder="Masukkan nama lengkap beserta gelar (jika ada)" required 
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-navy-lt focus:ring-4 focus:ring-navy-lt/10 transition-all outline-none text-gray-700 placeholder-gray-400" />
+            <p id="err-namaLengkap" class="hidden mt-1.5 text-xs font-semibold text-red-500"><i class="fas fa-exclamation-circle"></i> Nama lengkap wajib diisi.</p>
+          </div>
+
+          <div class="group">
+            <label for="noWA" class="block text-sm font-bold text-navy mb-1.5 group-focus-within:text-navy-lt transition-colors">
+              <i class="fab fa-whatsapp text-gray-400 mr-1.5 text-base"></i> No. WhatsApp <span class="text-red-500">*</span>
+            </label>
+            <input type="tel" id="noWA" name="noWA" placeholder="08xxxxxxxxxx" required 
+              oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-navy-lt focus:ring-4 focus:ring-navy-lt/10 transition-all outline-none text-gray-700 placeholder-gray-400" />
+            <p class="mt-1 text-[11px] text-gray-400">Pastikan nomor aktif untuk notifikasi balasan.</p>
+            <p id="err-noWA" class="hidden mt-1 text-xs font-semibold text-red-500"><i class="fas fa-exclamation-circle"></i> No. WhatsApp wajib diisi.</p>
+          </div>
+
+          <div class="group">
+            <label for="asalInstansi" class="block text-sm font-bold text-navy mb-1.5 group-focus-within:text-navy-lt transition-colors">
+              <i class="fas fa-building text-gray-400 mr-1.5"></i> Asal Instansi / Unit <span class="text-red-500">*</span>
+            </label>
+            <input type="text" id="asalInstansi" name="asalInstansi" placeholder="Contoh: Untad, Pemprov, Universitas Lain..." required 
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-navy-lt focus:ring-4 focus:ring-navy-lt/10 transition-all outline-none text-gray-700 placeholder-gray-400" />
+            <p id="err-asalInstansi" class="hidden mt-1.5 text-xs font-semibold text-red-500"><i class="fas fa-exclamation-circle"></i> Asal instansi wajib diisi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Kategori & Keperluan -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-card-in" style="animation-delay: 0.2s;">
+        <div class="bg-gradient-to-r from-navy to-navy-mid px-6 py-4 flex items-center gap-4 border-b-[3px] border-gold">
+          <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-gold-lt text-sm backdrop-blur-sm shrink-0">
+            <i class="fas fa-clipboard-list"></i>
+          </div>
+          <div>
+            <h2 class="text-white font-bold text-lg tracking-wide">Tujuan Kunjungan</h2>
+            <p class="text-white/60 text-xs">Pilih kategori dan deskripsi keperluan</p>
+          </div>
+        </div>
+        
+        <div class="p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="group relative">
+            <label for="kategoriTamu" class="block text-sm font-bold text-navy mb-1.5 group-focus-within:text-navy-lt transition-colors">
+              <i class="fas fa-users text-gray-400 mr-1.5"></i> Kategori Tamu <span class="text-red-500">*</span>
+            </label>
+            <select id="kategoriTamu" name="kategoriTamu" required onchange="toggleOther('kategoriTamu','otherKategori')" 
+              class="custom-select w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-navy-lt focus:ring-4 focus:ring-navy-lt/10 transition-all outline-none text-gray-700 cursor-pointer">
+              <option value="" disabled selected>— Pilih Kategori —</option>
+              <option value="Dosen">Dosen</option>
+              <option value="Mahasiswa">Mahasiswa</option>
+              <option value="Mitra">Mitra</option>
+              <option value="Pemerintah">Pemerintah</option>
+              <option value="Industri">Industri</option>
+              <option value="Tamu Umum">Tamu Umum</option>
+              <option value="Peneliti">Peneliti</option>
+              <option value="Media">Media</option>
+              <option value="Lainnya">Lainnya (isi manual)</option>
+            </select>
+            <div id="otherKategori" class="hidden mt-3 animate-fade-in">
+              <input type="text" id="otherKategoriVal" placeholder="Sebutkan kategori lainnya..." 
+                class="w-full px-4 py-2.5 bg-gold/5 border border-gold/30 rounded-lg focus:bg-white focus:border-gold focus:ring-4 focus:ring-gold/10 transition-all outline-none text-gray-700 text-sm placeholder-gray-400" />
+            </div>
+            <p id="err-kategoriTamu" class="hidden mt-1.5 text-xs font-semibold text-red-500"><i class="fas fa-exclamation-circle"></i> Kategori tamu wajib dipilih.</p>
+          </div>
+
+          <div class="group relative">
+            <label for="keperluan" class="block text-sm font-bold text-navy mb-1.5 group-focus-within:text-navy-lt transition-colors">
+              <i class="fas fa-briefcase text-gray-400 mr-1.5"></i> Keperluan Utama <span class="text-red-500">*</span>
+            </label>
+            <select id="keperluan" name="keperluan" required onchange="toggleOther('keperluan','otherKeperluan')" 
+              class="custom-select w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-navy-lt focus:ring-4 focus:ring-navy-lt/10 transition-all outline-none text-gray-700 cursor-pointer">
+              <option value="" disabled selected>— Pilih Keperluan —</option>
+              <option value="Penelitian">Penelitian</option>
+              <option value="Pengabdian">Pengabdian</option>
+              <option value="Administrasi">Administrasi</option>
+              <option value="Kerja Sama">Kerja Sama</option>
+              <option value="Konsultasi">Konsultasi</option>
+              <option value="Seminar/Acara">Seminar / Acara</option>
+              <option value="Monitoring">Monitoring & Evaluasi</option>
+              <option value="Lainnya">Lainnya (isi manual)</option>
+            </select>
+            <div id="otherKeperluan" class="hidden mt-3 animate-fade-in">
+              <input type="text" id="otherKeperluanVal" placeholder="Sebutkan keperluan lainnya..." 
+                class="w-full px-4 py-2.5 bg-gold/5 border border-gold/30 rounded-lg focus:bg-white focus:border-gold focus:ring-4 focus:ring-gold/10 transition-all outline-none text-gray-700 text-sm placeholder-gray-400" />
+            </div>
+            <p id="err-keperluan" class="hidden mt-1.5 text-xs font-semibold text-red-500"><i class="fas fa-exclamation-circle"></i> Keperluan wajib dipilih.</p>
+          </div>
+
+          <div class="md:col-span-2 group">
+            <label for="deskripsiKeperluan" class="block text-sm font-bold text-navy mb-1.5 group-focus-within:text-navy-lt transition-colors">
+              <i class="fas fa-align-left text-gray-400 mr-1.5"></i> Detail Keperluan <span class="text-gray-400 font-normal">(Opsional)</span>
+            </label>
+            <textarea id="deskripsiKeperluan" name="deskripsiKeperluan" rows="3"
+              placeholder="Jelaskan secara singkat rincian tujuan kunjungan Anda..."
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-navy-lt focus:ring-4 focus:ring-navy-lt/10 transition-all outline-none text-gray-700 placeholder-gray-400 resize-y min-h-[100px]"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Pegawai Dituju -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-card-in" style="animation-delay: 0.3s;">
+        <div class="bg-gradient-to-r from-navy to-navy-mid px-6 py-4 flex items-center gap-4 border-b-[3px] border-gold">
+          <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-gold-lt text-sm backdrop-blur-sm shrink-0">
+            <i class="fas fa-sitemap"></i>
+          </div>
+          <div>
+            <h2 class="text-white font-bold text-lg tracking-wide">Pegawai / Unit yang Dituju</h2>
+            <p class="text-white/60 text-xs">Pilih atau cari pihak yang ingin ditemui</p>
+          </div>
+        </div>
+        
+        <div class="p-6 md:p-8">
+          <div class="group relative" id="autocompleteWrap">
+            <label for="pegawaiDituju" class="block text-sm font-bold text-navy mb-1.5 group-focus-within:text-navy-lt transition-colors">
+              <i class="fas fa-search text-gray-400 mr-1.5"></i> Nama Pegawai / Unit <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <input type="text" id="pegawaiDituju" name="pegawaiDituju"
+                placeholder="Ketik untuk mencari nama atau unit..." autocomplete="off" required 
+                class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-navy-lt focus:ring-4 focus:ring-navy-lt/10 transition-all outline-none text-gray-700 placeholder-gray-400" />
+              <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-navy transition-colors"></i>
+              
+              <!-- Autocomplete List -->
+              <div id="autocompleteList" class="hidden absolute top-[calc(100%+8px)] left-0 right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl max-h-60 overflow-y-auto divide-y divide-gray-50"></div>
+            </div>
+            <p class="mt-2 text-xs text-gray-500"><i class="fas fa-info-circle text-gold mr-1"></i> Pilih dari daftar yang muncul, atau ketik manual jika nama tidak tersedia.</p>
+            <p id="err-pegawaiDituju" class="hidden mt-1 text-xs font-semibold text-red-500"><i class="fas fa-exclamation-circle"></i> Pegawai / unit yang dituju wajib diisi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Upload -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-card-in" style="animation-delay: 0.4s;">
+        <div class="bg-gradient-to-r from-navy to-navy-mid px-6 py-4 flex items-center gap-4 border-b-[3px] border-gold">
+          <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-gold-lt text-sm backdrop-blur-sm shrink-0">
+            <i class="fas fa-paperclip"></i>
+          </div>
+          <div>
+            <h2 class="text-white font-bold text-lg tracking-wide">Lampiran Dokumen</h2>
+            <p class="text-white/60 text-xs">Surat Tugas / Pengantar (Opsional)</p>
+          </div>
+        </div>
+        
+        <div class="p-6 md:p-8">
+          <div id="uploadZone" class="relative border-2 border-dashed border-gray-300 rounded-2xl p-8 md:p-10 text-center cursor-pointer bg-gray-50 hover:bg-navy/5 hover:border-navy/50 transition-all duration-300 group">
+            <input type="file" id="fileUpload" accept="image/*,.pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+            <div class="w-16 h-16 mx-auto mb-4 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 group-hover:text-navy group-hover:scale-110 transition-all duration-300">
+              <i class="fas fa-cloud-upload-alt text-2xl"></i>
+            </div>
+            <p class="text-sm md:text-base text-gray-600 mb-1"><strong class="text-navy">Klik untuk memilih file</strong> atau seret & jatuhkan file di sini</p>
+            <p class="text-xs text-gray-400">Mendukung format JPG, PNG, atau PDF (Maks. 5 MB)</p>
+          </div>
+
+          <div id="uploadPreview" class="hidden mt-4 bg-white border border-gray-100 p-3 rounded-xl flex items-center gap-4 shadow-sm animate-fade-in">
+            <div class="w-12 h-12 rounded-lg bg-gray-100 flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-200">
+              <img src="" alt="Preview" id="previewThumb" class="hidden w-full h-full object-cover" />
+              <i id="previewIcon" class="hidden fas fa-file-pdf text-red-500 text-xl"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p id="previewName" class="text-sm font-bold text-navy truncate"></p>
+              <p id="previewSize" class="text-[11px] text-gray-500"></p>
+            </div>
+            <button type="button" onclick="removeFile()" class="w-8 h-8 rounded-full bg-red-50 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center transition-colors mr-1">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <p id="err-file" class="hidden mt-2 text-xs font-semibold text-red-500"><i class="fas fa-exclamation-circle"></i> Ukuran file terlalu besar.</p>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="animate-card-in" style="animation-delay: 0.5s;">
+        <button type="submit" id="submitBtn" class="group relative w-full bg-gradient-to-r from-navy to-navy-lt text-white font-bold text-lg py-4.5 rounded-2xl shadow-[0_8px_24px_rgba(13,43,78,0.3)] hover:shadow-[0_12px_32px_rgba(13,43,78,0.4)] hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+          
+          <div class="relative flex items-center justify-center gap-3 py-4">
+            <span id="btnText" class="flex items-center gap-2"><i class="fas fa-paper-plane text-gold-lt"></i> Kirim & Daftarkan Kunjungan</span>
+            <div id="btnSpinner" class="hidden w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+          </div>
+          
+          <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-gold via-gold-lt to-gold bg-[length:200%_auto] animate-shimmer"></div>
+        </button>
+        <p class="text-center text-[11px] text-gray-400 mt-4"><i class="fas fa-lock mr-1 text-gray-300"></i> Data Anda dijamin keamanannya dan hanya digunakan untuk keperluan instansi.</p>
+      </div>
+
+    </form>
+  </main>
+
+  <footer class="text-center py-6 border-t border-gray-200/60 text-xs text-gray-400 bg-white/50 backdrop-blur-sm">
+    <p class="mb-1">&copy; 2025 LPPM Universitas Tadulako</p>
+    <p>Jl. Soekarno-Hatta Km. 9, Palu, Sulawesi Tengah &nbsp;|&nbsp; <a href="https://lppm.untad.ac.id" target="_blank" class="hover:text-navy transition-colors">lppm.untad.ac.id</a></p>
+  </footer>
+
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-24 opacity-0 bg-navy text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 text-sm font-semibold transition-all duration-400 z-[9999] pointer-events-none">
+    <i id="toastIcon" class="fas fa-info-circle text-gold-lt text-lg"></i> 
+    <span id="toastMsg"></span>
+  </div>
+
+  <script>
+    function updateClockAndGreeting() {
+      const now = new Date();
+      const optionsTime = { timeZone: 'Asia/Makassar', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+      const timeString = now.toLocaleTimeString('id-ID', optionsTime).replace(/\./g, ':');
+      document.getElementById('realtimeClock').textContent = timeString + ' WITA';
+
+      const hour = parseInt(now.toLocaleTimeString('id-ID', { timeZone: 'Asia/Makassar', hour: '2-digit', hour12: false }), 10);
+      let greeting = 'Selamat Datang';
+      if (hour >= 4 && hour < 11) greeting = 'Selamat Pagi';
+      else if (hour >= 11 && hour < 15) greeting = 'Selamat Siang';
+      else if (hour >= 15 && hour < 18) greeting = 'Selamat Sore';
+      else greeting = 'Selamat Malam';
+      document.getElementById('dynamicGreeting').textContent = `${greeting}! Selamat Datang di LPPM Universitas Tadulako`;
+    }
+    setInterval(updateClockAndGreeting, 1000);
+    updateClockAndGreeting();
+
+    let PEGAWAI_LIST = ['Memuat daftar pegawai...'];
+    async function fetchPegawaiList() {
+      if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+        PEGAWAI_LIST = ['Data dummy 1', 'Data dummy 2']; return;
+      }
+      try {
+        const response = await fetch(APPS_SCRIPT_URL + '?action=getPegawai');
+        const result = await response.json();
+        if (result.status === 'success' && Array.isArray(result.data)) PEGAWAI_LIST = result.data;
+      } catch (error) { console.error(error); }
+    }
+    fetchPegawaiList();
+
+    const REQUIRED_FIELDS = ['namaLengkap','noWA','asalInstansi','kategoriTamu','keperluan','pegawaiDituju'];
+
+    function updateProgress() {
+      let filled = 0;
+      REQUIRED_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.value.trim()) filled++;
+      });
+      const pct = Math.round((filled / REQUIRED_FIELDS.length) * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressPct').textContent = pct + '%';
+      const fillEl = document.getElementById('progressFill');
+      if (pct === 100) fillEl.className = 'h-full bg-gradient-to-r from-green-500 to-green-400 w-full transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(34,197,94,0.4)]';
+      else fillEl.className = `h-full bg-gradient-to-r from-navy to-gold transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(200,151,42,0.4)]`;
+    }
+
+    REQUIRED_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', updateProgress);
+        el.addEventListener('change', updateProgress);
+      }
+    });
+
+    function toggleOther(selectId, wrapId) {
+      const sel = document.getElementById(selectId);
+      const wrap = document.getElementById(wrapId);
+      const input = document.getElementById(wrapId + 'Val');
+      if (sel.value === 'Lainnya') { wrap.classList.remove('hidden'); input.focus(); } 
+      else { wrap.classList.add('hidden'); input.value = ''; }
+    }
+
+    const acInput = document.getElementById('pegawaiDituju');
+    const acList  = document.getElementById('autocompleteList');
+    const acWrap  = document.getElementById('autocompleteWrap');
+    let acActive  = -1;
+
+    acInput.addEventListener('input', () => {
+      const q = acInput.value.trim().toLowerCase();
+      acList.innerHTML = '';
+      acActive = -1;
+      if (!q) { acList.classList.add('hidden'); return; }
+      const matches = PEGAWAI_LIST.filter(p => p.toLowerCase().includes(q));
+      if (!matches.length) { acList.classList.add('hidden'); return; }
+
+      matches.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'px-4 py-3 text-sm text-gray-700 hover:bg-gold/10 hover:text-navy cursor-pointer flex items-center gap-3 transition-colors';
+        const regex = new RegExp(`(${q})`, 'gi');
+        const highlighted = item.replace(regex, '<strong class="text-navy font-bold">$1</strong>');
+        div.innerHTML = `<div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center shrink-0"><i class="fas fa-user-tie text-gray-400 text-xs"></i></div> <span class="flex-1">${highlighted}</span>`;
+        div.addEventListener('click', () => {
+          acInput.value = item; acList.classList.add('hidden'); updateProgress(); validateField('pegawaiDituju');
+        });
+        acList.appendChild(div);
+      });
+      acList.classList.remove('hidden');
+    });
+
+    acInput.addEventListener('keydown', e => {
+      const items = acList.querySelectorAll('div.px-4');
+      if (!items.length || acList.classList.contains('hidden')) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); acActive = Math.min(acActive+1, items.length-1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); acActive = Math.max(acActive-1, -1); }
+      else if (e.key === 'Enter' && acActive >= 0) { e.preventDefault(); items[acActive].click(); } 
+      else if (e.key === 'Escape') { acList.classList.add('hidden'); }
+      items.forEach((item, i) => {
+        if (i === acActive) { item.classList.add('bg-gold/10', 'text-navy'); item.scrollIntoView({ block: 'nearest' }); } 
+        else { item.classList.remove('bg-gold/10', 'text-navy'); }
+      });
+    });
+    document.addEventListener('click', e => { if (!acWrap.contains(e.target)) acList.classList.add('hidden'); });
+
+    // File Handling
+    const fileInput = document.getElementById('fileUpload');
+    const uploadZone = document.getElementById('uploadZone');
+    const preview = document.getElementById('uploadPreview');
+    const prevThumb = document.getElementById('previewThumb');
+    const prevIcon = document.getElementById('previewIcon');
+    const prevName = document.getElementById('previewName');
+    const prevSize = document.getElementById('previewSize');
+    let uploadedFile = null;
+
+    fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(ev => uploadZone.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }));
+    ['dragenter', 'dragover'].forEach(ev => uploadZone.addEventListener(ev, () => { uploadZone.classList.add('bg-navy/10', 'border-navy'); uploadZone.classList.remove('bg-gray-50', 'border-gray-300'); }));
+    ['dragleave', 'drop'].forEach(ev => uploadZone.addEventListener(ev, () => { uploadZone.classList.remove('bg-navy/10', 'border-navy'); uploadZone.classList.add('bg-gray-50', 'border-gray-300'); }));
+    uploadZone.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
+
+    function handleFile(file) {
+      if (!file) return;
+      const errEl = document.getElementById('err-file');
+      if (file.size > 5 * 1024 * 1024) { errEl.classList.remove('hidden'); return; }
+      errEl.classList.add('hidden');
+      uploadedFile = file; prevName.textContent = file.name; prevSize.textContent = formatSize(file.size);
+      prevThumb.classList.add('hidden'); prevIcon.classList.add('hidden');
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = e => { prevThumb.src = e.target.result; prevThumb.classList.remove('hidden'); };
+        reader.readAsDataURL(file);
+      } else if (file.type === 'application/pdf') { prevIcon.classList.remove('hidden'); }
+      preview.classList.remove('hidden'); preview.classList.add('flex');
+    }
+
+    function removeFile() { uploadedFile = null; fileInput.value = ''; preview.classList.add('hidden'); preview.classList.remove('flex'); }
+    function formatSize(bytes) { if (bytes < 1024) return bytes + ' B'; if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB'; return (bytes/(1024*1024)).toFixed(1) + ' MB'; }
+
+    function validateField(id) {
+      const el = document.getElementById(id); const errEl = document.getElementById('err-' + id);
+      if(!el) return true;
+      const ok = el.value.trim() !== '';
+      if (!ok) { errEl.classList.remove('hidden'); el.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/20'); el.classList.remove('border-gray-200', 'focus:border-navy-lt', 'focus:ring-navy-lt/10'); } 
+      else { errEl.classList.add('hidden'); el.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/20'); el.classList.add('border-gray-200', 'focus:border-navy-lt', 'focus:ring-navy-lt/10'); }
+      return ok;
+    }
+    REQUIRED_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) { el.addEventListener('blur', () => validateField(id)); el.addEventListener('change', () => validateField(id)); } });
+
+    document.getElementById('bukuTamuForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      let valid = true;
+      REQUIRED_FIELDS.forEach(id => { if (!validateField(id)) valid = false; });
+      if (!valid) { 
+        showToast('Mohon lengkapi semua field yang diberi tanda bintang (*).', 'error'); 
+        const firstErr = document.querySelector('.border-red-500');
+        if(firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; 
+      }
+
+      const kategori = resolveOther('kategoriTamu', 'otherKategoriVal');
+      const keperluan = resolveOther('keperluan', 'otherKeperluanVal');
+
+      const btn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+      
+      btn.disabled = true; btn.classList.add('opacity-80', 'cursor-not-allowed');
+      btnText.classList.add('hidden'); btnSpinner.classList.remove('hidden');
+
+      try {
+        const params = new URLSearchParams();
+        params.append('namaLengkap', document.getElementById('namaLengkap').value.trim());
+        params.append('noWA', document.getElementById('noWA').value.trim());
+        params.append('asalInstansi', document.getElementById('asalInstansi').value.trim());
+        params.append('kategoriTamu', kategori);
+        params.append('keperluan', keperluan);
+        params.append('deskripsiKeperluan', document.getElementById('deskripsiKeperluan').value.trim());
+        params.append('pegawaiDituju', document.getElementById('pegawaiDituju').value.trim());
+
+        if (uploadedFile) {
+          const b64 = await toBase64(uploadedFile);
+          params.append('fileData', b64.split(',')[1]);
+          params.append('fileName', uploadedFile.name);
+          params.append('fileType', uploadedFile.type);
+        }
+
+        if(APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+            await new Promise(r => setTimeout(r, 1500));
+            showSuccess({ nama: document.getElementById('namaLengkap').value.trim(), keperluan: keperluan, dituju: document.getElementById('pegawaiDituju').value.trim() });
+            return;
+        }
+
+        const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() });
+        const json = await res.json();
+        if (json.status === 'success') { showSuccess({ nama: document.getElementById('namaLengkap').value.trim(), keperluan: keperluan, dituju: document.getElementById('pegawaiDituju').value.trim() }); } 
+        else { throw new Error(json.message || 'Gagal menyimpan data.'); }
+      } catch (err) {
+        showToast('Gagal mengirim: ' + err.message, 'error');
+        btn.disabled = false; btn.classList.remove('opacity-80', 'cursor-not-allowed'); btnText.classList.remove('hidden'); btnSpinner.classList.add('hidden');
+      }
+    });
+
+    function resolveOther(selectId, otherId) {
+      const sel = document.getElementById(selectId);
+      if (sel.value === 'Lainnya') { const other = document.getElementById(otherId); return other ? (other.value.trim() || 'Lainnya') : 'Lainnya'; }
+      return sel.value;
+    }
+    function toBase64(file) { return new Promise((res, rej) => { const reader = new FileReader(); reader.onload  = () => res(reader.result); reader.onerror = rej; reader.readAsDataURL(file); }); }
+
+    function showSuccess({ nama, keperluan, dituju }) {
+      document.getElementById('bukuTamuForm').classList.add('hidden'); document.getElementById('progressContainer').classList.add('hidden');
+      const now = new Date(); const optionsTime = { timeZone: 'Asia/Makassar', day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' };
+      const timeWITA = now.toLocaleString('id-ID', optionsTime).replace(/\./g, ':');
+      document.getElementById('sNama').textContent = nama; document.getElementById('sKeperluan').textContent = keperluan; document.getElementById('sDituju').textContent = dituju; document.getElementById('sWaktu').textContent = timeWITA + ' WITA';
+      const successEl = document.getElementById('successScreen');
+      successEl.classList.remove('hidden'); successEl.classList.add('block');
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    function resetForm() {
+      const form = document.getElementById('bukuTamuForm'); form.reset(); form.classList.remove('hidden');
+      document.getElementById('progressContainer').classList.remove('hidden');
+      document.getElementById('successScreen').classList.add('hidden'); document.getElementById('successScreen').classList.remove('block');
+      const btn = document.getElementById('submitBtn'); btn.disabled = false; btn.classList.remove('opacity-80', 'cursor-not-allowed'); document.getElementById('btnText').classList.remove('hidden'); document.getElementById('btnSpinner').classList.add('hidden');
+      removeFile(); updateProgress(); document.getElementById('otherKategori').classList.add('hidden'); document.getElementById('otherKeperluan').classList.add('hidden');
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }
+
+    let toastTimer;
+    function showToast(msg, type='info') {
+      const t = document.getElementById('toast'); const m = document.getElementById('toastMsg'); const i = document.getElementById('toastIcon');
+      m.textContent = msg;
+      if(type === 'error') { t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-full shadow-[0_10px_30px_rgba(220,38,38,0.4)] flex items-center gap-3 text-sm font-semibold transition-all duration-400 z-[9999]'; i.className = 'fas fa-exclamation-triangle text-white'; } 
+      else { t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-navy text-white px-6 py-3 rounded-full shadow-[0_10px_30px_rgba(13,43,78,0.4)] flex items-center gap-3 text-sm font-semibold transition-all duration-400 z-[9999]'; i.className = 'fas fa-check-circle text-green-400'; }
+      t.classList.remove('translate-y-24', 'opacity-0'); clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.classList.add('translate-y-24', 'opacity-0'); }, 4000);
+    }
+  </script>
+</body>
+</html>
